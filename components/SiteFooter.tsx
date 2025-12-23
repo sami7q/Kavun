@@ -97,12 +97,7 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
         <div className="grid gap-8 md:grid-cols-3 md:items-start">
           {/* Column 1 – Brand */}
           <div className={isAr ? "text-right" : "text-left"}>
-            <div
-              className={
-                "mb-3 flex items-center gap-2 " +
-                (isAr ? "flex-row-reverse" : "flex-row")
-              }
-            >
+            <div className={"mb-3 flex items-center gap-2 " + (isAr ? "flex-row-reverse" : "flex-row")}>
               <div
                 className="relative h-10 w-10 overflow-hidden rounded-full bg-white ring-1"
                 style={{
@@ -122,9 +117,7 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
 
               {/* ✅ RTL alignment fix */}
               <div className={"flex flex-col " + (isAr ? "items-end" : "items-start")}>
-                <span className="text-lg font-extrabold tracking-wide">
-                  {t(config.brandName, lang)}
-                </span>
+                <span className="text-lg font-extrabold tracking-wide">{t(config.brandName, lang)}</span>
                 <span className="text-xs" style={{ color: BRAND.muted }}>
                   {lang === "en" ? "Cafe culture with a modern twist." : "ثقافة قهوة بلمسة عصرية."}
                 </span>
@@ -201,9 +194,7 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
             </ul>
 
             <p className="mt-4 text-xs" style={{ color: "rgba(15,94,107,0.55)" }}>
-              {lang === "en"
-                ? "Follow us on Instagram for updates."
-                : "تابعنا على إنستغرام لآخر التحديثات."}
+              {lang === "en" ? "Follow us on Instagram for updates." : "تابعنا على إنستغرام لآخر التحديثات."}
             </p>
           </div>
 
@@ -214,12 +205,7 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
             </p>
 
             {/* ✅ FIX: make row full width so justify works + RTL order */}
-            <ul
-              className={
-                "mt-3 flex w-full items-center gap-2 " +
-                (isAr ? "justify-end flex-row-reverse" : "justify-start")
-              }
-            >
+            <ul className={"mt-3 flex w-full items-center gap-2 " + (isAr ? "justify-end flex-row-reverse" : "justify-start")}>
               {/* Instagram */}
               <li>
                 <a
@@ -301,10 +287,7 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
         {/* MAP BLOCK */}
         <div className="space-y-3" dir={isAr ? "rtl" : "ltr"}>
           <p
-            className={
-              "text-xs font-semibold uppercase tracking-[0.18em] " +
-              (isAr ? "text-right" : "text-left")
-            }
+            className={"text-xs font-semibold uppercase tracking-[0.18em] " + (isAr ? "text-right" : "text-left")}
             style={{ color: accent }}
           >
             {lang === "en" ? "Find us on the map" : "موقعنا على الخريطة"}
@@ -344,16 +327,11 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
           </div>
 
           <div
-            className={
-              "flex w-full items-center gap-2 text-[11px] " +
-              (isAr ? "justify-end" : "justify-start")
-            }
+            className={"flex w-full items-center gap-2 text-[11px] " + (isAr ? "justify-end" : "justify-start")}
             style={{ color: "rgba(15,94,107,0.55)" }}
           >
             <span>
-              {lang === "en"
-                ? "Open the pinned location in Google Maps."
-                : "افتح الموقع المثبت على Google Maps."}
+              {lang === "en" ? "Open the pinned location in Google Maps." : "افتح الموقع المثبت على Google Maps."}
             </span>
 
             <a
@@ -369,36 +347,61 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
         </div>
       </div>
 
-      {/* BOTTOM BAR (copyright + SoftoDev button) */}
+      {/* ✅ BOTTOM BAR (Centered + prettier) */}
       <div
-        className="border-t py-4"
+        className="border-t py-6"
         style={{
           borderColor: BRAND.border,
-          backgroundColor: "rgba(247,250,251,0.85)",
+          backgroundColor: "rgba(247,250,251,0.92)",
           color: "rgba(15,94,107,0.62)",
         }}
       >
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-4 md:flex-row">
-          <div className="text-[11px]">
-            © {new Date().getFullYear()} {t(config.brandName, lang)}.{" "}
-            {lang === "en" ? "All rights reserved." : "جميع الحقوق محفوظة."}
-          </div>
-
-          <a
-            href="https://softodev.net"
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-flex items-center justify-center rounded-full px-6 py-3 text-[13px] font-extrabold transition hover:-translate-y-0.5"
+        <div className="mx-auto max-w-5xl px-4">
+          <div
+            className="rounded-3xl border px-4 py-5 text-center shadow-sm"
             style={{
-              backgroundColor: BRAND.primary,
-              color: "white",
-              boxShadow: "0 18px 44px rgba(15,94,107,0.20)",
+              borderColor: "rgba(229,238,241,0.95)",
+              backgroundColor: "rgba(255,255,255,0.72)",
+              backdropFilter: "blur(10px)",
+              boxShadow: "0 18px 45px rgba(15,94,107,0.10)",
             }}
           >
-            {lang === "en"
-              ? "Developed by SoftoDev — softodev.net"
-              : "تم التطوير بواسطة SoftoDev - softodev.net"}
-          </a>
+            {/* SoftoDev button centered */}
+            <a
+              href="https://softodev.net"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="group inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-[13px] font-extrabold transition active:scale-[0.99]"
+              style={{
+                color: "white",
+                background: `linear-gradient(90deg, ${BRAND.primary}, ${BRAND.soft}, ${BRAND.primary})`,
+                boxShadow: "0 18px 44px rgba(15,94,107,0.22)",
+              }}
+            >
+              <span className="opacity-95">
+                {lang === "en" ? "Developed by SoftoDev" : "تم التطوير بواسطة SoftoDev"}
+              </span>
+              <span className="opacity-90">•</span>
+              <span className="font-black">softodev.net</span>
+
+              {/* small arrow */}
+              <span
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/15 transition group-hover:translate-x-0.5"
+                aria-hidden="true"
+              >
+                ↗
+              </span>
+            </a>
+
+            {/* Divider */}
+            <div className="mx-auto mt-4 h-px w-28" style={{ backgroundColor: "rgba(15,94,107,0.14)" }} />
+
+            {/* Rights centered */}
+            <div className="mt-3 text-[11px]" style={{ color: "rgba(15,94,107,0.62)" }}>
+              © {new Date().getFullYear()} {t(config.brandName, lang)} •{" "}
+              {lang === "en" ? "All rights reserved." : "جميع الحقوق محفوظة."}
+            </div>
+          </div>
         </div>
       </div>
     </footer>
