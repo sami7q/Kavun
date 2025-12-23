@@ -17,14 +17,13 @@ export function HeroSection({ config, lang }: HeroSectionProps) {
   const isAr = lang === "ar";
 
   // ✅ KAVUN Brand Palette (Teal)
-  const primary = "#1A8597"; // main teal
-  const deep = "#0F5E6B"; // hover/depth
-  const paper = "#F7FAFB"; // soft paper
+  const primary = "#1A8597";
+  const deep = "#0F5E6B";
+  const paper = "#F7FAFB";
 
   const [canAutoplay, setCanAutoplay] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  // try autoplay safely (some browsers can block)
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
@@ -43,18 +42,18 @@ export function HeroSection({ config, lang }: HeroSectionProps) {
 
   const handleMenuClick = () => {
     const menuSection = document.getElementById("menu");
-    if (menuSection)
-      menuSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (menuSection) menuSection.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
     <section id="hero" className="relative w-full overflow-hidden">
       <div className="relative w-full pt-[76px] md:pt-0">
-        {/* MOBILE (full video, no crop) */}
+        {/* ===================== MOBILE ===================== */}
         <div className="relative md:hidden h-[calc(100svh-76px)] min-h-[520px] w-full">
+          {/* ✅ Fill screen nicely */}
           <video
             ref={videoRef}
-            className="absolute inset-0 h-full w-full object-contain"
+            className="absolute inset-0 h-full w-full object-cover"
             src="/video.mp4"
             playsInline
             muted
@@ -63,16 +62,25 @@ export function HeroSection({ config, lang }: HeroSectionProps) {
             preload="metadata"
           />
 
-          {/* ✅ Teal overlay (soft, clean) */}
+          {/* ✅ Soft teal wash */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                "linear-gradient(to bottom, rgba(26,133,151,0.08), rgba(15,94,107,0.16))",
+                "linear-gradient(to bottom, rgba(26,133,151,0.10), rgba(15,94,107,0.26))",
             }}
           />
 
-          {/* ✅ If autoplay blocked, show tiny hint (optional) */}
+          {/* ✅ Strong bottom gradient to make CTA pop */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[52%]"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(15,94,107,0.60), rgba(15,94,107,0.28), transparent)",
+            }}
+          />
+
+          {/* ✅ If autoplay blocked */}
           {!canAutoplay && (
             <div className="absolute top-3 inset-x-0 flex justify-center px-4">
               <div
@@ -88,15 +96,15 @@ export function HeroSection({ config, lang }: HeroSectionProps) {
             </div>
           )}
 
-          {/* ✅ Mobile CTA */}
-          <div className="absolute inset-x-0 bottom-5 flex justify-center px-4">
+          {/* ✅ Mobile CTA (better spacing + safe area) */}
+          <div className="absolute inset-x-0 bottom-5 flex justify-center px-4 pb-[env(safe-area-inset-bottom)]">
             <button
               type="button"
               onClick={handleMenuClick}
-              className="group relative inline-flex w-full max-w-[380px] items-center justify-center gap-2 rounded-full px-6 py-3 text-[14px] font-extrabold text-white active:scale-[0.98]"
+              className="group relative inline-flex w-full max-w-[420px] items-center justify-center gap-2 rounded-full px-6 py-3 text-[15px] font-extrabold text-white active:scale-[0.98]"
               style={{
                 backgroundColor: primary,
-                boxShadow: "0 18px 44px rgba(15,94,107,0.22)",
+                boxShadow: "0 18px 44px rgba(15,94,107,0.26)",
               }}
             >
               {/* glow */}
@@ -113,9 +121,7 @@ export function HeroSection({ config, lang }: HeroSectionProps) {
                 className={
                   "relative inline-flex h-8 w-8 items-center justify-center rounded-full ring-1 ring-white/30 " +
                   "transition-transform duration-200 " +
-                  (isAr
-                    ? "group-hover:-translate-x-0.5"
-                    : "group-hover:translate-x-0.5")
+                  (isAr ? "group-hover:-translate-x-0.5" : "group-hover:translate-x-0.5")
                 }
                 style={{ backgroundColor: "rgba(255,255,255,0.14)" }}
               >
@@ -137,7 +143,7 @@ export function HeroSection({ config, lang }: HeroSectionProps) {
                 </svg>
               </span>
 
-              {/* pulse (deep teal) */}
+              {/* pulse */}
               <span
                 className="pointer-events-none absolute inset-0 rounded-full animate-[pulse_2.8s_ease-in-out_infinite] opacity-[0.12]"
                 style={{ backgroundColor: deep }}
@@ -146,7 +152,7 @@ export function HeroSection({ config, lang }: HeroSectionProps) {
           </div>
         </div>
 
-        {/* DESKTOP */}
+        {/* ===================== DESKTOP ===================== */}
         <div className="relative hidden md:block h-[70vh] lg:h-[88vh] min-h-[680px] w-full">
           <video
             className="absolute inset-0 h-full w-full object-cover"
@@ -158,7 +164,6 @@ export function HeroSection({ config, lang }: HeroSectionProps) {
             preload="metadata"
           />
 
-          {/* ✅ Desktop overlay */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{
@@ -196,9 +201,7 @@ export function HeroSection({ config, lang }: HeroSectionProps) {
                   xmlns="http://www.w3.org/2000/svg"
                   className={
                     "transition-transform duration-200 " +
-                    (isAr
-                      ? "rotate-180 group-hover:-translate-x-0.5"
-                      : "group-hover:translate-x-0.5")
+                    (isAr ? "rotate-180 group-hover:-translate-x-0.5" : "group-hover:translate-x-0.5")
                   }
                 >
                   <path
@@ -211,7 +214,6 @@ export function HeroSection({ config, lang }: HeroSectionProps) {
                 </svg>
               </span>
 
-              {/* hover glow */}
               <span
                 className="pointer-events-none absolute -inset-1 rounded-full opacity-0 blur-xl transition-opacity duration-200 group-hover:opacity-[0.20]"
                 style={{ backgroundColor: deep }}
