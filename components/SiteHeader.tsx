@@ -20,18 +20,20 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const isAr = lang === "ar";
 
-  // ✅ Brand Palette (RED)
+  // ✅ KAVUN Brand Palette (Teal)
   const BRAND = {
-    primary: "#E81B24",
-    deep: "#AD1E1F",
-    gold: "#D99328",
-    paper: "#F8F7F8",
-    black: "#110F11",
+    primary: "#1A8597",
+    deep: "#0F5E6B",
+    soft: "#2A9CB0",
+    paper: "#F7FAFB",
+    text: "#0F172A",
+    muted: "#6B7280",
+    border: "#E5EEF1",
   } as const;
 
-  const accent = BRAND.primary;
+  const accent = config.primaryColor ?? BRAND.primary;
 
-  // ✅ Removed: offers + popular
+  // ✅ Nav
   const navLinks: { id: string; label: LocalizedText }[] = [
     { id: "hero", label: { en: "Home", ar: "الرئيسية" } },
     { id: "qr", label: { en: "Gallery", ar: "صور" } },
@@ -46,15 +48,28 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // ✅ Header style: VERY transparent on desktop (md+), normal on mobile
   const headerCardStyle = useMemo(() => {
+    // mobile background (keeps readability)
+    const mobileBg = scrolled
+      ? "rgba(247,250,251,0.92)"
+      : "rgba(247,250,251,0.78)";
+
+    // desktop background (very transparent, teal-tinted)
+    const desktopBg = scrolled
+      ? "rgba(26,133,151,0.10)"
+      : "rgba(26,133,151,0.06)";
+
     return {
-      backgroundColor: scrolled
-        ? "rgba(248,247,248,0.92)"
-        : "rgba(248,247,248,0.72)",
-      borderColor: scrolled ? "rgba(232,27,36,0.35)" : "rgba(232,27,36,0.22)",
+      backgroundColor: mobileBg,
+      // override background on md+ only
+      backgroundImage: `linear-gradient(to right, ${desktopBg}, ${desktopBg})`,
+      borderColor: scrolled
+        ? "rgba(26,133,151,0.22)"
+        : "rgba(26,133,151,0.14)",
       boxShadow: scrolled
-        ? "0 18px 48px rgba(17,15,17,0.16)"
-        : "0 14px 40px rgba(17,15,17,0.12)",
+        ? "0 18px 48px rgba(15,94,107,0.12)"
+        : "0 14px 40px rgba(15,94,107,0.08)",
     } as const;
   }, [scrolled]);
 
@@ -70,18 +85,18 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
       {/* glow */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-24">
         <div
-          className="absolute -left-20 -top-16 h-56 w-56 rounded-full blur-3xl opacity-25"
+          className="absolute -left-20 -top-16 h-56 w-56 rounded-full blur-3xl opacity-20"
           style={{ backgroundColor: BRAND.primary }}
         />
         <div
-          className="absolute right-[-90px] -top-16 h-64 w-64 rounded-full blur-3xl opacity-18"
+          className="absolute right-[-90px] -top-16 h-64 w-64 rounded-full blur-3xl opacity-14"
           style={{ backgroundColor: BRAND.deep }}
         />
         <div
           className="absolute inset-x-0 top-0 h-24"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(232,27,36,0.10), transparent)",
+              "linear-gradient(to bottom, rgba(26,133,151,0.10), transparent)",
           }}
         />
       </div>
@@ -89,14 +104,25 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
       <div className="mx-auto w-full max-w-7xl px-3 pt-3 sm:px-4 sm:pt-4 lg:px-6">
         <div
           className="relative rounded-[999px] border backdrop-blur-md"
+          // ✅ keep mobile bg via backgroundColor, and make desktop very transparent via md: overrides below
           style={headerCardStyle}
         >
-          <div className="flex items-center justify-between gap-2 px-3 py-2 sm:gap-3 sm:px-4 sm:py-3 md:px-5">
+          {/* ✅ md+ override: ultra transparent teal tint */}
+          <div
+            className="absolute inset-0 rounded-[999px] hidden md:block"
+            style={{
+              backgroundColor: scrolled
+                ? "rgba(26,133,151,0.10)"
+                : "rgba(26,133,151,0.06)",
+            }}
+          />
+
+          <div className="relative flex items-center justify-between gap-2 px-3 py-2 sm:gap-3 sm:px-4 sm:py-3 md:px-5">
             {/* Logo + Brand */}
             <div className="flex min-w-0 items-center gap-2">
               <div
                 className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-white shadow-sm ring-1 sm:h-10 sm:w-10 md:h-11 md:w-11"
-                style={{ borderColor: "rgba(232,27,36,0.18)" }}
+                style={{ borderColor: "rgba(26,133,151,0.18)" }}
               >
                 <Image
                   src="/logo/logo.png"
@@ -111,7 +137,7 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
               <div className={(isAr ? "text-right" : "text-left") + " min-w-0"}>
                 <span
                   className="block truncate text-[14px] font-extrabold tracking-wide sm:text-base md:text-lg"
-                  style={{ color: BRAND.black }}
+                  style={{ color: BRAND.text }}
                 >
                   {t(config.brandName, lang)}
                 </span>
@@ -127,10 +153,10 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
                   className={`group relative transition-colors ${
                     isAr ? "text-[15px]" : ""
                   }`}
-                  style={{ color: "rgba(17,15,17,0.72)" }}
+                  style={{ color: "rgba(15,23,42,0.74)" }}
                   onMouseEnter={(e) => ((e.currentTarget.style.color = accent))}
                   onMouseLeave={(e) =>
-                    ((e.currentTarget.style.color = "rgba(17,15,17,0.72)"))
+                    ((e.currentTarget.style.color = "rgba(15,23,42,0.74)"))
                   }
                 >
                   <span className={isAr ? "font-extrabold" : ""}>
@@ -151,8 +177,8 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
                 className="relative inline-flex items-center overflow-hidden rounded-full border px-1 py-0.5 text-[11px] font-extrabold shadow-sm sm:px-1.5 sm:text-xs"
                 dir="ltr"
                 style={{
-                  borderColor: "rgba(232,27,36,0.22)",
-                  backgroundColor: "rgba(248,247,248,0.88)",
+                  borderColor: "rgba(26,133,151,0.20)",
+                  backgroundColor: "rgba(247,250,251,0.92)",
                 }}
               >
                 <span
@@ -161,7 +187,7 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
                   }`}
                   style={{
                     backgroundColor: BRAND.primary,
-                    boxShadow: "0 10px 22px rgba(232,27,36,0.24)",
+                    boxShadow: "0 10px 22px rgba(26,133,151,0.22)",
                   }}
                 />
                 <button
@@ -170,7 +196,7 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
                   className={`relative z-10 px-2.5 py-1 transition-colors sm:px-3 sm:py-1.5 ${
                     lang === "en"
                       ? "text-white"
-                      : "text-[#110F11] hover:text-[#E81B24]"
+                      : "text-[#0F172A] hover:text-[#1A8597]"
                   }`}
                 >
                   EN
@@ -181,7 +207,7 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
                   className={`relative z-10 px-2.5 py-1 transition-colors sm:px-3 sm:py-1.5 ${
                     lang === "ar"
                       ? "text-white"
-                      : "text-[#110F11] hover:text-[#E81B24]"
+                      : "text-[#0F172A] hover:text-[#1A8597]"
                   }`}
                 >
                   ع
@@ -196,9 +222,9 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
                 aria-expanded={isMenuOpen}
                 onClick={toggleMenu}
                 style={{
-                  borderColor: "rgba(232,27,36,0.22)",
-                  backgroundColor: "rgba(248,247,248,0.92)",
-                  color: BRAND.black,
+                  borderColor: "rgba(26,133,151,0.20)",
+                  backgroundColor: "rgba(247,250,251,0.96)",
+                  color: BRAND.text,
                 }}
               >
                 <div className="flex flex-col gap-0.5">
@@ -206,19 +232,19 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
                     className={`h-[2px] w-4 origin-center rounded-full transition-transform ${
                       isMenuOpen ? "translate-y-[3px] rotate-45" : ""
                     }`}
-                    style={{ backgroundColor: BRAND.black }}
+                    style={{ backgroundColor: BRAND.text }}
                   />
                   <span
                     className={`h-[2px] w-4 origin-center rounded-full transition-opacity ${
                       isMenuOpen ? "opacity-0" : "opacity-100"
                     }`}
-                    style={{ backgroundColor: BRAND.black }}
+                    style={{ backgroundColor: BRAND.text }}
                   />
                   <span
                     className={`h-[2px] w-4 origin-center rounded-full transition-transform ${
                       isMenuOpen ? "-translate-y-[3px] -rotate-45" : ""
                     }`}
-                    style={{ backgroundColor: BRAND.black }}
+                    style={{ backgroundColor: BRAND.text }}
                   />
                 </div>
               </button>
@@ -240,15 +266,15 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
             <div
               className="origin-top rounded-3xl border p-3 shadow-2xl backdrop-blur-xl animate-[fadeDown_0.18s_ease-out]"
               style={{
-                borderColor: "rgba(232,27,36,0.20)",
-                backgroundColor: "rgba(248,247,248,0.98)",
+                borderColor: "rgba(26,133,151,0.18)",
+                backgroundColor: "rgba(247,250,251,0.98)",
               }}
             >
               <div
                 className="mb-2 rounded-2xl px-4 py-3"
                 style={{
-                  background: `linear-gradient(90deg, rgba(232,27,36,0.12), rgba(217,147,40,0.10))`,
-                  border: "1px solid rgba(232,27,36,0.16)",
+                  background: `linear-gradient(90deg, rgba(26,133,151,0.12), rgba(42,156,176,0.10))`,
+                  border: "1px solid rgba(26,133,151,0.14)",
                 }}
               >
                 <div
@@ -256,7 +282,7 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
                     "text-[13px] font-extrabold " +
                     (isAr ? "text-right" : "text-left")
                   }
-                  style={{ color: BRAND.black }}
+                  style={{ color: BRAND.text }}
                 >
                   {lang === "en" ? "Navigate" : "التنقل"}
                 </div>
@@ -271,9 +297,9 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
                     className="flex items-center justify-between rounded-2xl px-4 py-3"
                     style={{
                       direction: isAr ? "rtl" : "ltr",
-                      color: BRAND.black,
-                      border: "1px solid rgba(232,27,36,0.12)",
-                      backgroundColor: "rgba(255,255,255,0.80)",
+                      color: BRAND.text,
+                      border: "1px solid rgba(26,133,151,0.12)",
+                      backgroundColor: "rgba(255,255,255,0.86)",
                     }}
                   >
                     <span>{t(item.label, lang)}</span>

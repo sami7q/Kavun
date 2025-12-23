@@ -10,7 +10,7 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  title: "Fried Chicken",
+  title: "KAVUN",
   description: "",
 };
 

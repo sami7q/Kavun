@@ -15,12 +15,12 @@ interface QrSectionProps {
 }
 
 const galleryImages = [
-  { src: "/gallery/1.jpg", alt: "Coffee cherries" },
-  { src: "/gallery/2.jpg", alt: "Red poster" },
-  { src: "/gallery/3.jpg", alt: "Roasting" },
-  { src: "/gallery/4.jpg", alt: "Old photo" },
-  { src: "/gallery/5.jpg", alt: "Cafe shot" },
-  { src: "/gallery/6.jpg", alt: "Beans closeup" },
+  { src: "/gallery/1.png", alt: "Coffee cherries" },
+  { src: "/gallery/2.png", alt: "Red poster" },
+  { src: "/gallery/3.png", alt: "Roasting" },
+  { src: "/gallery/4.png", alt: "Old photo" },
+  { src: "/gallery/5.png", alt: "Cafe shot" },
+  { src: "/gallery/6.png", alt: "Beans closeup" },
 ];
 
 function Chevron({ dir }: { dir: "left" | "right" }) {

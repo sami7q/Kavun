@@ -14,48 +14,42 @@ interface SiteFooterProps {
 export function SiteFooter({ config, lang }: SiteFooterProps) {
   const isAr = lang === "ar";
 
-  // ✅ Brand Palette (exact)
+  // ✅ KAVUN Brand Palette (Teal)
   const BRAND = {
-    primary: "#E81B24",
-    deep: "#AD1E1F",
-    soft: "#E45E63",
-    rose: "#E8A39F",
-    gold: "#D99328",
-    caramel: "#DFA65D",
-    cream: "#EDD0A4",
-    paper: "#F8F7F8",
-    cocoa: "#651810",
-    black: "#110F11",
+    primary: "#1A8597",
+    deep: "#0F5E6B",
+    soft: "#2A9CB0",
+    light: "#7CCAD6",
+    paper: "#F7FAFB",
+    text: "#0F172A",
+    muted: "#6B7280",
+    border: "#E5EEF1",
   } as const;
 
   const accent = config.primaryColor ?? BRAND.primary;
 
-  // ✅ Location (UPDATED) — your new link
-  const mapsLink = "https://maps.app.goo.gl/vGopZmA9kq4bQ6bn8";
+  // ✅ MAP + Instagram sourced from SiteConfig (so you change it once only)
+  const mapsLink =
+    config.footer.contacts.find((c) => c.includes("maps.app.goo.gl")) ||
+    "https://maps.app.goo.gl/ooqTjMoAZuaX9PXv6";
 
-  // ✅ Coords
-  const MAP_LAT = 33.3655546;
-  const MAP_LNG = 44.4080991;
+  const instagramLink =
+    config.footer.contacts.find((c) => c.includes("instagram.com")) ||
+    "https://www.instagram.com/kavun.eg?igsh=MXM1cDhhbGN2anl5Mg%3D%3D";
 
-  // ✅ iframe embed MUST use coords
-  const mapsEmbedSrc = `https://www.google.com/maps?q=${MAP_LAT},${MAP_LNG}&z=17&output=embed`;
-
-  // ✅ Social links
-  const phoneRaw = "+9647733885500";
-  const phoneDisplay = "+964 773 388 5500";
-  const whatsappLink = `https://wa.me/${phoneRaw.replace("+", "")}`;
-
-  const instagramLink = "https://www.instagram.com/fried.chicken.iq/?hl=ar";
-  const facebookLink = "https://www.facebook.com/fried.chicken.iq?locale=ar_AR";
+  // ✅ Embed uses the mapsLink directly (no coords needed)
+  const mapsEmbedSrc = `https://www.google.com/maps?q=${encodeURIComponent(
+    mapsLink
+  )}&output=embed`;
 
   return (
     <footer
       id="contact"
       className="mt-10 border-t pt-10 md:pt-12"
       style={{
-        borderColor: "rgba(101,24,16,0.10)",
-        backgroundImage: `linear-gradient(to bottom, ${BRAND.paper}, rgba(237,208,164,0.35))`,
-        color: BRAND.cocoa,
+        borderColor: BRAND.border,
+        backgroundImage: `linear-gradient(to bottom, ${BRAND.paper}, rgba(26,133,151,0.07))`,
+        color: BRAND.text,
       }}
     >
       <div
@@ -73,10 +67,10 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
               }
             >
               <div
-                className="relative h-10 w-10 overflow-hidden rounded-full bg-white shadow-md ring-1"
+                className="relative h-10 w-10 overflow-hidden rounded-full bg-white ring-1"
                 style={{
-                  borderColor: "rgba(101,24,16,0.12)",
-                  boxShadow: "0 10px 24px rgba(17,15,17,0.10)",
+                  borderColor: BRAND.border,
+                  boxShadow: "0 10px 24px rgba(15,94,107,0.10)",
                 }}
               >
                 <Image
@@ -89,19 +83,24 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
                 />
               </div>
 
-              <div className="flex flex-col">
+              {/* ✅ RTL alignment fix */}
+              <div
+                className={
+                  "flex flex-col " + (isAr ? "items-end" : "items-start")
+                }
+              >
                 <span className="text-lg font-extrabold tracking-wide">
                   {t(config.brandName, lang)}
                 </span>
-                <span className="text-xs" style={{ color: "rgba(101,24,16,0.70)" }}>
+                <span className="text-xs" style={{ color: BRAND.muted }}>
                   {lang === "en"
-                    ? "Crispy. Hot. Always ready."
-                    : "مقرمش. حار. جاهز دائمًا."}
+                    ? "Cafe culture with a modern twist."
+                    : "ثقافة قهوة بلمسة عصرية."}
                 </span>
               </div>
             </div>
 
-            <p className="mb-3 text-sm" style={{ color: "rgba(101,24,16,0.75)" }}>
+            <p className="mb-3 text-sm" style={{ color: BRAND.muted }}>
               {t(config.footer.about, lang)}
             </p>
 
@@ -110,11 +109,11 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
               <>
                 <p
                   className="mb-2 text-xs font-semibold uppercase tracking-[0.16em]"
-                  style={{ color: "rgba(101,24,16,0.55)" }}
+                  style={{ color: "rgba(15,94,107,0.55)" }}
                 >
                   {t(config.footer.openingTitle, lang)}
                 </p>
-                <div className="space-y-1 text-xs" style={{ color: "rgba(101,24,16,0.78)" }}>
+                <div className="space-y-1 text-xs" style={{ color: BRAND.muted }}>
                   {config.footer.openings.map((row, i) => (
                     <p key={i}>
                       {t(row.label, lang)} · {t(row.time, lang)}
@@ -128,53 +127,29 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
             <div
               className="mt-4 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-extrabold"
               style={{
-                borderColor: "rgba(101,24,16,0.12)",
-                backgroundColor: "rgba(255,255,255,0.70)",
-                color: BRAND.cocoa,
+                borderColor: BRAND.border,
+                backgroundColor: "rgba(255,255,255,0.80)",
+                color: BRAND.deep,
               }}
             >
-              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: BRAND.gold }} />
+              <span
+                className="h-2 w-2 rounded-full"
+                style={{ backgroundColor: BRAND.primary }}
+              />
               {lang === "en" ? "Fresh daily" : "طازج يوميًا"}
             </div>
           </div>
 
           {/* Column 2 – Contact */}
           <div className={isAr ? "text-right" : "text-left"}>
-            <p className="mb-2 text-sm font-extrabold" style={{ color: BRAND.cocoa }}>
+            <p
+              className="mb-2 text-sm font-extrabold"
+              style={{ color: BRAND.text }}
+            >
               {lang === "en" ? "Contact" : "التواصل"}
             </p>
 
-            <ul className="space-y-2 text-sm" style={{ color: "rgba(101,24,16,0.78)" }}>
-              <li>
-                {/* ✅ FIX: isolate phone direction + keep order nice in RTL */}
-                <a
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className={
-                    "inline-flex items-center gap-2 rounded-full border px-3 py-2 transition hover:-translate-y-[1px] " +
-                    (isAr ? "flex-row-reverse" : "flex-row")
-                  }
-                  style={{
-                    borderColor: "rgba(101,24,16,0.12)",
-                    backgroundColor: "rgba(255,255,255,0.70)",
-                    color: accent,
-                    boxShadow: "0 12px 28px rgba(17,15,17,0.08)",
-                  }}
-                >
-                  <span className="font-extrabold">WhatsApp</span>
-
-                  {/* ✅ Phone MUST be LTR + isolated (prevents +964 from flipping) */}
-                  <span
-                    dir="ltr"
-                    className="text-[12px] tabular-nums whitespace-nowrap [unicode-bidi:isolate]"
-                    style={{ color: "rgba(101,24,16,0.70)" }}
-                  >
-                    {phoneDisplay}
-                  </span>
-                </a>
-              </li>
-
+            <ul className="space-y-2 text-sm" style={{ color: BRAND.muted }}>
               <li>
                 <a
                   href={instagramLink}
@@ -183,19 +158,7 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
                   className="hover:underline"
                   style={{ color: accent }}
                 >
-                  Instagram: @fried.chicken.iq
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href={facebookLink}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="hover:underline"
-                  style={{ color: accent }}
-                >
-                  Facebook: fried.chicken.iq
+                  Instagram: @kavun.eg
                 </a>
               </li>
 
@@ -212,55 +175,31 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
               </li>
             </ul>
 
-            <p className="mt-4 text-xs" style={{ color: "rgba(101,24,16,0.55)" }}>
+            <p
+              className="mt-4 text-xs"
+              style={{ color: "rgba(15,94,107,0.55)" }}
+            >
               {lang === "en"
-                ? "For orders & inquiries, contact us on WhatsApp."
-                : "للطلب والاستفسار، تواصل معنا على واتساب."}
+                ? "Follow us on Instagram for updates."
+                : "تابعنا على إنستغرام لآخر التحديثات."}
             </p>
           </div>
 
-          {/* Column 3 – Social icons */}
+          {/* Column 3 – Follow */}
           <div className={isAr ? "text-right" : "text-left"}>
-            <p className="mb-2 text-sm font-extrabold" style={{ color: BRAND.cocoa }}>
+            <p
+              className="mb-2 text-sm font-extrabold"
+              style={{ color: BRAND.text }}
+            >
               {lang === "en" ? "Follow us" : "تابعنا"}
             </p>
 
             <ul
               className={
-                "mt-3 flex items-center gap-2 " +
-                (isAr ? "justify-end" : "justify-start")
+                "mt-3 flex w-full items-center gap-2 " +
+                (isAr ? "justify-end flex-row-reverse" : "justify-start")
               }
             >
-              {/* WhatsApp */}
-              <li>
-                <a
-                  href={whatsappLink}
-                  aria-label="WhatsApp"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border bg-white transition hover:-translate-y-0.5"
-                  style={{
-                    borderColor: "rgba(101,24,16,0.12)",
-                    color: BRAND.cocoa,
-                    boxShadow: "0 10px 24px rgba(17,15,17,0.10)",
-                  }}
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-5 w-5"
-                  >
-                    <path d="M12 3a9 9 0 0 0-7.8 13.37L3 21l4.1-1.1A9 9 0 1 0 12 3z" />
-                    <path d="M9.5 9.2c.2-.4.3-.6.6-.6h.4c.2 0 .3 0 .4.3l.4 1c.1.3.1.4 0 .5l-.3.4a.4.4 0 0 0 0 .4 4.7 4.7 0 0 0 2.2 2.2.4.4 0 0 0 .4 0l.4-.3c.1-.1.3-.1.5 0l1 .4c.3.1.3.2.3.4v.4c0 .3-.2.6-.6.8-.4.3-.9.3-1.5.2a5.7 5.7 0 0 1-3.1-1.6 5.6 5.6 0 0 1-1.4-3.3c0-.5 0-.9.3-1.3z" />
-                  </svg>
-                </a>
-              </li>
-
               {/* Instagram */}
               <li>
                 <a
@@ -270,9 +209,9 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
                   rel="noreferrer noopener"
                   className="inline-flex h-10 w-10 items-center justify-center rounded-full border bg-white transition hover:-translate-y-0.5"
                   style={{
-                    borderColor: "rgba(101,24,16,0.12)",
-                    color: BRAND.cocoa,
-                    boxShadow: "0 10px 24px rgba(17,15,17,0.10)",
+                    borderColor: BRAND.border,
+                    color: BRAND.deep,
+                    boxShadow: "0 10px 24px rgba(15,94,107,0.10)",
                   }}
                 >
                   <svg
@@ -292,38 +231,56 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
                 </a>
               </li>
 
-              {/* Facebook */}
+              {/* Map */}
               <li>
                 <a
-                  href={facebookLink}
-                  aria-label="Facebook"
+                  href={mapsLink}
+                  aria-label="Location"
                   target="_blank"
                   rel="noreferrer noopener"
                   className="inline-flex h-10 w-10 items-center justify-center rounded-full border bg-white transition hover:-translate-y-0.5"
                   style={{
-                    borderColor: "rgba(101,24,16,0.12)",
-                    color: BRAND.cocoa,
-                    boxShadow: "0 10px 24px rgba(17,15,17,0.10)",
+                    borderColor: BRAND.border,
+                    color: BRAND.deep,
+                    boxShadow: "0 10px 24px rgba(15,94,107,0.10)",
                   }}
                 >
-                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" className="h-5 w-5">
-                    <path d="M13.5 21v-6h2.4l.4-3.5h-2.8V9.2c0-.9.3-1.4 1.5-1.4H16V4.7c-.3 0-1-.1-1.8-.1-2.4 0-3.9 1.4-3.9 4v2H8v3.5h2.3V21h3.2z" />
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-5 w-5"
+                  >
+                    <path d="M12 21s7-4.4 7-11a7 7 0 0 0-14 0c0 6.6 7 11 7 11z" />
+                    <circle cx="12" cy="10" r="2.4" />
                   </svg>
                 </a>
               </li>
             </ul>
 
-            {/* accent strip */}
-            <div className="mt-4">
+            <div
+              className={
+                "mt-4 flex flex-col " + (isAr ? "items-end" : "items-start")
+              }
+            >
               <div
                 className="h-[3px] w-28 rounded-full"
                 style={{
-                  background: "linear-gradient(90deg, #E81B24, #D99328, #DFA65D)",
-                  opacity: 0.85,
+                  background: `linear-gradient(90deg, ${BRAND.primary}, ${BRAND.soft}, ${BRAND.light})`,
+                  opacity: 0.9,
                 }}
               />
-              <p className="mt-2 text-[11px] font-semibold" style={{ color: "rgba(101,24,16,0.55)" }}>
-                {lang === "en" ? "Best taste — fast service" : "أفضل طعم — خدمة سريعة"}
+              <p
+                className="mt-2 text-[11px] font-semibold"
+                style={{ color: "rgba(15,94,107,0.55)" }}
+              >
+                {lang === "en"
+                  ? "Clean vibe — quality coffee"
+                  : "أجواء نظيفة — قهوة بجودة عالية"}
               </p>
             </div>
           </div>
@@ -344,8 +301,8 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
           <div
             className="relative overflow-hidden rounded-2xl border bg-white"
             style={{
-              borderColor: "rgba(101,24,16,0.12)",
-              boxShadow: "0 18px 45px rgba(17,15,17,0.10)",
+              borderColor: BRAND.border,
+              boxShadow: "0 18px 45px rgba(15,94,107,0.10)",
             }}
           >
             <a
@@ -357,8 +314,8 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
                 (isAr ? "left-3" : "right-3")
               }
               style={{
-                borderColor: "rgba(101,24,16,0.12)",
-                backgroundColor: "rgba(255,255,255,0.85)",
+                borderColor: BRAND.border,
+                backgroundColor: "rgba(255,255,255,0.88)",
                 color: accent,
               }}
             >
@@ -366,7 +323,7 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
             </a>
 
             <iframe
-              title="Fried Chicken location"
+              title="KAVUN location"
               src={mapsEmbedSrc}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -376,10 +333,10 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
 
           <div
             className={
-              "flex items-center gap-2 text-[11px] " +
+              "flex w-full items-center gap-2 text-[11px] " +
               (isAr ? "justify-end" : "justify-start")
             }
-            style={{ color: "rgba(101,24,16,0.55)" }}
+            style={{ color: "rgba(15,94,107,0.55)" }}
           >
             <span>
               {lang === "en"
@@ -402,15 +359,40 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
 
       {/* BOTTOM BAR */}
       <div
-        className="border-t py-3 text-center text-[11px]"
+        className="border-t py-3"
         style={{
-          borderColor: "rgba(101,24,16,0.10)",
-          backgroundColor: "rgba(248,247,248,0.70)",
-          color: "rgba(101,24,16,0.62)",
+          borderColor: BRAND.border,
+          backgroundColor: "rgba(247,250,251,0.85)",
+          color: "rgba(15,94,107,0.62)",
         }}
       >
-        © {new Date().getFullYear()} {t(config.brandName, lang)}.{" "}
-        {lang === "en" ? "All rights reserved." : "جميع الحقوق محفوظة."}
+        <div
+          className={
+            "mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-4 text-center md:flex-row " +
+            (isAr ? "md:flex-row-reverse" : "")
+          }
+        >
+          <div className="text-[11px]">
+            © {new Date().getFullYear()} {t(config.brandName, lang)}.{" "}
+            {lang === "en" ? "All rights reserved." : "جميع الحقوق محفوظة."}
+          </div>
+
+          <a
+            href="https://softodev.net"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="inline-flex items-center justify-center rounded-full px-5 py-2 text-[12px] font-extrabold transition hover:-translate-y-[1px]"
+            style={{
+              backgroundColor: BRAND.primary,
+              color: "white",
+              boxShadow: "0 16px 40px rgba(15,94,107,0.18)",
+            }}
+          >
+            {lang === "en"
+              ? "Built by SoftoDev • softodev.net"
+              : "تم التطوير بواسطة SoftoDev • softodev.net"}
+          </a>
+        </div>
       </div>
     </footer>
   );
