@@ -52,7 +52,9 @@ export type PopularItem = {
 
 export interface SiteConfig {
   brandName: LocalizedText;
-  primaryColor: string;
+
+  // ✅ make it optional (your components use ?? fallback)
+  primaryColor?: string;
 
   hero: {
     badge: LocalizedText;
@@ -485,7 +487,6 @@ export const defaultSiteConfig: SiteConfig = {
 
     socialLabel: { en: "", ar: "" },
 
-    // ✅ If you want IQD keep it, if you want plain numbers put "".
     currencySymbol: "",
   },
 };

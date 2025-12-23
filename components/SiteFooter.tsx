@@ -11,6 +11,43 @@ interface SiteFooterProps {
   lang: Lang;
 }
 
+function extractLatLngFromGoogleMapsUrl(url: string): { lat: number; lng: number } | null {
+  if (!url) return null;
+
+  // 1) .../@lat,lng,17z...
+  let m = url.match(/@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?),/);
+  if (m?.[1] && m?.[2]) {
+    const lat = Number(m[1]);
+    const lng = Number(m[2]);
+    if (!Number.isNaN(lat) && !Number.isNaN(lng)) return { lat, lng };
+  }
+
+  // 2) ...!3dlat!4dlng...
+  m = url.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
+  if (m?.[1] && m?.[2]) {
+    const lat = Number(m[1]);
+    const lng = Number(m[2]);
+    if (!Number.isNaN(lat) && !Number.isNaN(lng)) return { lat, lng };
+  }
+
+  // 3) q=lat,lng
+  m = url.match(/[?&]q=(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/);
+  if (m?.[1] && m?.[2]) {
+    const lat = Number(m[1]);
+    const lng = Number(m[2]);
+    if (!Number.isNaN(lat) && !Number.isNaN(lng)) return { lat, lng };
+  }
+
+  return null;
+}
+
+function buildGoogleMapsEmbedSrc(mapsLink: string, fallback: { lat: number; lng: number }) {
+  const coords = extractLatLngFromGoogleMapsUrl(mapsLink) ?? fallback;
+  const q = `${coords.lat},${coords.lng}`;
+  // ✅ reliable embed
+  return `https://www.google.com/maps?output=embed&q=${encodeURIComponent(q)}&z=17`;
+}
+
 export function SiteFooter({ config, lang }: SiteFooterProps) {
   const isAr = lang === "ar";
 
@@ -28,19 +65,19 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
 
   const accent = config.primaryColor ?? BRAND.primary;
 
-  // ✅ MAP + Instagram sourced from SiteConfig (so you change it once only)
-  const mapsLink =
-    config.footer.contacts.find((c) => c.includes("maps.app.goo.gl")) ||
-    "https://maps.app.goo.gl/ooqTjMoAZuaX9PXv6";
-
+  // ✅ Pull links from config (so changing siteConfig updates footer automatically)
   const instagramLink =
-    config.footer.contacts.find((c) => c.includes("instagram.com")) ||
-    "https://www.instagram.com/kavun.eg?igsh=MXM1cDhhbGN2anl5Mg%3D%3D";
+    config.footer.contacts.find((c) => c.includes("instagram.com")) ??
+    "https://www.instagram.com/kavun.eg";
 
-  // ✅ Embed uses the mapsLink directly (no coords needed)
-  const mapsEmbedSrc = `https://www.google.com/maps?q=${encodeURIComponent(
-    mapsLink
-  )}&output=embed`;
+  const mapsLink =
+    config.footer.contacts.find((c) => c.includes("google.com/maps") || c.includes("maps.app.goo.gl")) ??
+    "https://www.google.com/maps";
+
+  // ✅ Fallback coords (only used if link doesn't contain coords)
+  const FALLBACK = { lat: 30.0652355, lng: 31.2176574 };
+
+  const mapsEmbedSrc = buildGoogleMapsEmbedSrc(mapsLink, FALLBACK);
 
   return (
     <footer
@@ -84,18 +121,12 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
               </div>
 
               {/* ✅ RTL alignment fix */}
-              <div
-                className={
-                  "flex flex-col " + (isAr ? "items-end" : "items-start")
-                }
-              >
+              <div className={"flex flex-col " + (isAr ? "items-end" : "items-start")}>
                 <span className="text-lg font-extrabold tracking-wide">
                   {t(config.brandName, lang)}
                 </span>
                 <span className="text-xs" style={{ color: BRAND.muted }}>
-                  {lang === "en"
-                    ? "Cafe culture with a modern twist."
-                    : "ثقافة قهوة بلمسة عصرية."}
+                  {lang === "en" ? "Cafe culture with a modern twist." : "ثقافة قهوة بلمسة عصرية."}
                 </span>
               </div>
             </div>
@@ -132,20 +163,14 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
                 color: BRAND.deep,
               }}
             >
-              <span
-                className="h-2 w-2 rounded-full"
-                style={{ backgroundColor: BRAND.primary }}
-              />
+              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: BRAND.primary }} />
               {lang === "en" ? "Fresh daily" : "طازج يوميًا"}
             </div>
           </div>
 
           {/* Column 2 – Contact */}
           <div className={isAr ? "text-right" : "text-left"}>
-            <p
-              className="mb-2 text-sm font-extrabold"
-              style={{ color: BRAND.text }}
-            >
+            <p className="mb-2 text-sm font-extrabold" style={{ color: BRAND.text }}>
               {lang === "en" ? "Contact" : "التواصل"}
             </p>
 
@@ -175,10 +200,7 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
               </li>
             </ul>
 
-            <p
-              className="mt-4 text-xs"
-              style={{ color: "rgba(15,94,107,0.55)" }}
-            >
+            <p className="mt-4 text-xs" style={{ color: "rgba(15,94,107,0.55)" }}>
               {lang === "en"
                 ? "Follow us on Instagram for updates."
                 : "تابعنا على إنستغرام لآخر التحديثات."}
@@ -187,13 +209,11 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
 
           {/* Column 3 – Follow */}
           <div className={isAr ? "text-right" : "text-left"}>
-            <p
-              className="mb-2 text-sm font-extrabold"
-              style={{ color: BRAND.text }}
-            >
+            <p className="mb-2 text-sm font-extrabold" style={{ color: BRAND.text }}>
               {lang === "en" ? "Follow us" : "تابعنا"}
             </p>
 
+            {/* ✅ FIX: make row full width so justify works + RTL order */}
             <ul
               className={
                 "mt-3 flex w-full items-center gap-2 " +
@@ -262,11 +282,8 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
               </li>
             </ul>
 
-            <div
-              className={
-                "mt-4 flex flex-col " + (isAr ? "items-end" : "items-start")
-              }
-            >
+            {/* ✅ FIX: align strip/text correctly in RTL */}
+            <div className={"mt-4 flex flex-col " + (isAr ? "items-end" : "items-start")}>
               <div
                 className="h-[3px] w-28 rounded-full"
                 style={{
@@ -274,13 +291,8 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
                   opacity: 0.9,
                 }}
               />
-              <p
-                className="mt-2 text-[11px] font-semibold"
-                style={{ color: "rgba(15,94,107,0.55)" }}
-              >
-                {lang === "en"
-                  ? "Clean vibe — quality coffee"
-                  : "أجواء نظيفة — قهوة بجودة عالية"}
+              <p className="mt-2 text-[11px] font-semibold" style={{ color: "rgba(15,94,107,0.55)" }}>
+                {lang === "en" ? "Clean vibe — quality coffee" : "أجواء نظيفة — قهوة بجودة عالية"}
               </p>
             </div>
           </div>
@@ -357,21 +369,16 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
         </div>
       </div>
 
-      {/* BOTTOM BAR */}
+      {/* BOTTOM BAR (copyright + SoftoDev button) */}
       <div
-        className="border-t py-3"
+        className="border-t py-4"
         style={{
           borderColor: BRAND.border,
           backgroundColor: "rgba(247,250,251,0.85)",
           color: "rgba(15,94,107,0.62)",
         }}
       >
-        <div
-          className={
-            "mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-4 text-center md:flex-row " +
-            (isAr ? "md:flex-row-reverse" : "")
-          }
-        >
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-4 md:flex-row">
           <div className="text-[11px]">
             © {new Date().getFullYear()} {t(config.brandName, lang)}.{" "}
             {lang === "en" ? "All rights reserved." : "جميع الحقوق محفوظة."}
@@ -381,16 +388,16 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
             href="https://softodev.net"
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex items-center justify-center rounded-full px-5 py-2 text-[12px] font-extrabold transition hover:-translate-y-[1px]"
+            className="inline-flex items-center justify-center rounded-full px-6 py-3 text-[13px] font-extrabold transition hover:-translate-y-0.5"
             style={{
               backgroundColor: BRAND.primary,
               color: "white",
-              boxShadow: "0 16px 40px rgba(15,94,107,0.18)",
+              boxShadow: "0 18px 44px rgba(15,94,107,0.20)",
             }}
           >
             {lang === "en"
-              ? "Built by SoftoDev • softodev.net"
-              : "تم التطوير بواسطة SoftoDev • softodev.net"}
+              ? "Developed by SoftoDev — softodev.net"
+              : "تم التطوير بواسطة SoftoDev - softodev.net"}
           </a>
         </div>
       </div>

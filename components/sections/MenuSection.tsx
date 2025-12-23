@@ -55,7 +55,7 @@ export function MenuSection({ config, lang }: MenuSectionProps) {
               {/* ✅ keep height similar, focus on wider column */}
               <div className="relative h-56 sm:h-64 md:h-72 lg:h-[420px]">
                 <Image
-                  src="/cafe/menu-banner.jpg"
+                  src="/cafe/menu-banner.svg"
                   alt={t(config.menuSection.title, lang)}
                   fill
                   className="object-cover"

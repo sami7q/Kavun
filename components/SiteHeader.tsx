@@ -125,7 +125,7 @@ export function SiteHeader({ config, lang, onChangeLang }: SiteHeaderProps) {
                 style={{ borderColor: "rgba(26,133,151,0.18)" }}
               >
                 <Image
-                  src="/logo/logo.png"
+                  src="/logo/logo1.png"
                   alt={t(config.brandName, lang)}
                   fill
                   sizes="44px"
