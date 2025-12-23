@@ -111,7 +111,7 @@ export function SiteFooter({ config, lang }: SiteFooterProps) {
                 }}
               >
                 <Image
-                  src="/logo/logo.png"
+                  src="/logo/logo1.png"
                   alt={t(config.brandName, lang)}
                   fill
                   sizes="40px"

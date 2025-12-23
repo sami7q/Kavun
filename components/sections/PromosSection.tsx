@@ -8,15 +8,16 @@ interface PromosSectionProps {
   lang: Lang;
 }
 
-// ✅ Brand Palette (Red theme) — KEEP AS IS
+// ✅ KAVUN Brand Palette (Teal)
 const BRAND = {
-  primary: "#E81B24",
-  deep: "#AD1E1F",
-  soft: "#E45E63",
-  gold: "#D99328",
-  paper: "#F8F7F8",
-  cocoa: "#651810",
-  black: "#110F11",
+  primary: "#1A8597",
+  deep: "#0F5E6B",
+  soft: "#2A9CB0",
+  light: "#7CCAD6",
+  paper: "#F7FAFB",
+  text: "#0F172A",
+  muted: "#6B7280",
+  border: "#E5EEF1",
 } as const;
 
 function VolumeIcon({ muted }: { muted: boolean }) {
@@ -224,25 +225,25 @@ function Reel({
       ref={setEl}
       className={[
         "group relative overflow-hidden rounded-[28px] border",
-        "bg-white shadow-[0_18px_60px_rgba(17,15,17,0.10)]",
+        "bg-white shadow-[0_18px_60px_rgba(15,94,107,0.10)]",
         "transition-transform duration-300 will-change-transform",
-        "hover:-translate-y-1 hover:shadow-[0_24px_80px_rgba(17,15,17,0.14)]",
+        "hover:-translate-y-1 hover:shadow-[0_24px_80px_rgba(15,94,107,0.14)]",
         // enter animation
         "opacity-0 translate-y-4",
         inView ? "animate-[fadeUp_0.6s_ease-out_forwards]" : "",
       ].join(" ")}
       style={{
-        borderColor: "rgba(232,27,36,0.14)",
+        borderColor: "rgba(26,133,151,0.16)",
         animationDelay: `${Math.min(index * 80, 240)}ms`,
       }}
     >
-      {/* subtle red shine */}
+      {/* subtle teal shine */}
       <div className="pointer-events-none absolute -inset-24 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100">
         <div
           className="h-full w-full"
           style={{
             background:
-              "radial-gradient(circle at 30% 30%, rgba(232,27,36,0.18), transparent 60%)",
+              "radial-gradient(circle at 30% 30%, rgba(26,133,151,0.18), transparent 60%)",
           }}
         />
       </div>
@@ -283,14 +284,14 @@ function Reel({
         <div className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-white shadow-sm">
           <span
             className="h-1.5 w-1.5 rounded-full animate-[pulse_1.8s_ease-in-out_infinite]"
-            style={{ backgroundColor: BRAND.gold }}
+            style={{ backgroundColor: BRAND.light }}
           />
           <span
             className="rounded-full px-2 py-0.5"
             style={{
               background:
-                "linear-gradient(90deg, rgba(232,27,36,0.95), rgba(173,30,31,0.95))",
-              boxShadow: "0 10px 22px rgba(232,27,36,0.22)",
+                "linear-gradient(90deg, rgba(26,133,151,0.95), rgba(15,94,107,0.95))",
+              boxShadow: "0 10px 22px rgba(26,133,151,0.22)",
             }}
           >
             {badgeText}
@@ -346,7 +347,7 @@ function Reel({
               className="inline-flex items-center gap-2 rounded-full bg-black/55 px-3 py-2 text-[11px] font-extrabold text-white backdrop-blur-md transition hover:bg-black/65 focus:outline-none focus:ring-2 focus:ring-white/60 active:scale-[0.98]"
               aria-label={liked ? "Unlike" : "Like"}
             >
-              <span className={liked ? "text-white" : "text-white"}>
+              <span className="text-white">
                 <HeartIcon filled={liked} />
               </span>
               <span className="hidden sm:inline">{likes}</span>
@@ -418,31 +419,37 @@ export function PromosSection({ lang }: PromosSectionProps) {
   const reels = useMemo(
     () => [
       { src: "/promos/1.mp4", badge: { en: "FRESH", ar: "طازج" } },
-      { src: "/promos/2.mp4", badge: { en: "CRISPY", ar: "مقرمش" } },
-      { src: "/promos/3.mp4", badge: { en: "SAUCE", ar: "صوص" } },
+      { src: "/promos/2.mp4", badge: { en: "CREAMY", ar: "كريمي" } },
+      { src: "/promos/3.mp4", badge: { en: "VIBE", ar: "أجواء" } },
     ],
     []
   );
 
-  const badgeText = (b: { en: string; ar: string }) =>
-    lang === "ar" ? b.ar : b.en;
+  const badgeText = (b: { en: string; ar: string }) => (lang === "ar" ? b.ar : b.en);
 
   return (
     <section
       id="promos"
       className="relative overflow-hidden bg-white py-12 md:py-16"
     >
-      {/* ✅ soft background pattern (white, not heavy) */}
+      {/* ✅ soft teal background pattern */}
       <div className="pointer-events-none absolute inset-0">
         <div
           className="absolute -top-20 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full blur-3xl opacity-15"
           style={{ backgroundColor: BRAND.primary }}
         />
         <div
-          className="absolute -bottom-24 right-[-120px] h-[520px] w-[520px] rounded-full blur-3xl opacity-10"
-          style={{ backgroundColor: BRAND.gold }}
+          className="absolute -bottom-24 right-[-120px] h-[520px] w-[520px] rounded-full blur-3xl opacity-12"
+          style={{ backgroundColor: BRAND.light }}
         />
-        <div className="absolute inset-0 opacity-[0.06] [background-image:radial-gradient(#110F11_1px,transparent_1px)] [background-size:22px_22px]" />
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(15,23,42,1) 1px, transparent 1px)",
+            backgroundSize: "22px 22px",
+          }}
+        />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4">
@@ -451,24 +458,24 @@ export function PromosSection({ lang }: PromosSectionProps) {
           <div>
             <p
               className="text-[11px] font-extrabold uppercase tracking-[0.22em]"
-              style={{ color: "rgba(232,27,36,0.85)" }}
+              style={{ color: "rgba(26,133,151,0.85)" }}
             >
-              {lang === "en" ? "PROMOS" : "عروض مصوّرة"}
+              {lang === "en" ? "REELS" : "مقاطع"}
             </p>
             <h2
               className="mt-1 text-2xl font-extrabold sm:text-3xl"
-              style={{ color: BRAND.black }}
+              style={{ color: BRAND.text }}
             >
-              {lang === "en" ? "Taste the vibe" : "خلّك على الجو"}
+              {lang === "en" ? "Feel the vibe" : "خلّك على الجو"}
             </h2>
           </div>
 
           <div
             className="hidden sm:flex items-center gap-2 rounded-full border px-3 py-2 text-[12px] font-extrabold"
             style={{
-              borderColor: "rgba(232,27,36,0.16)",
-              backgroundColor: "rgba(248,247,248,0.7)",
-              color: "rgba(17,15,17,0.72)",
+              borderColor: "rgba(26,133,151,0.16)",
+              backgroundColor: "rgba(247,250,251,0.72)",
+              color: "rgba(15,23,42,0.72)",
             }}
           >
             <span
